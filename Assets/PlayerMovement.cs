@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
 {
   private Rigidbody2D rb;
   private bool CanJump = true;
+  private Animator playerAnimation;
   [SerializeField] private float MovementSpeed;
   [SerializeField] private float JumpSpeed;
   [SerializeField] private float RayLength;
@@ -27,6 +28,7 @@ public class PlayerMovement : MonoBehaviour
   private void Awake()
   {
     rb = GetComponent<Rigidbody2D>();
+    playerAnimation = GetComponent<Animator>();
   }
 
   private void Update()
@@ -82,6 +84,8 @@ public class PlayerMovement : MonoBehaviour
   }
   private void Movement()
   {
+    playerAnimation = GetComponent<Animator>();
+
     if (Input.GetAxisRaw("Horizontal") > 0)
     {
       rb.velocity = new Vector2(MovementSpeed * Time.fixedDeltaTime, rb.velocity.y);
@@ -104,5 +108,12 @@ public class PlayerMovement : MonoBehaviour
       rb.velocity = new Vector2(rb.velocity.x, 0);
       rb.velocity = new Vector2(rb.velocity.x, JumpSpeed);
     }
+    if (Input.GetKey(KeyCode.UpArrow) && CanJump)
+    {
+      rb.velocity = new Vector2(rb.velocity.x, 0);
+      rb.velocity = new Vector2(rb.velocity.x, JumpSpeed);
+    }
+    playerAnimation.SetFloat("Speed", Mathf.Abs(rb.velocity.x));
+
   }
 }
